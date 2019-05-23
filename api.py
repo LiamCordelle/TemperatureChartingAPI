@@ -73,10 +73,9 @@ def getData():
     return data.asCsv()
 
 if __name__ == "__main__":
-    atexit.register(exitHandler)
     os.system('modprobe w1-gpio')
     os.system('modprobe w1-therm')
 
-    # TODO: Before running the app, generate a thread to manage the data
+    recordPeriodicTemperature()
 
     app.run(host="0.0.0.0", port=8082, debug=True)
