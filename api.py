@@ -4,6 +4,7 @@ from threading import Timer
 import temperature as temp
 from datetime import datetime
 import os
+import atexit
 
 
 app = Flask(__name__)
@@ -48,6 +49,13 @@ class DualValueFixedLengthLinkedList:
 
         return output
 
+    def dumpToFile(self, filename):
+        f = open(filename, "w")
+
+        f.write(self.asCsv())
+
+        f.close()
+
 
 class DualValueNode:
     def __init__(self, value1, value2):
@@ -58,6 +66,7 @@ class DualValueNode:
 
 data = DualValueFixedLengthLinkedList(12 * 60) # Will record every minute, so hold 12 hours of data
 
+t = None
 
 def recordPeriodicTemperature():
     currentTemp = temp.get_pi_temperature()
@@ -73,10 +82,34 @@ def recordPeriodicTemperature():
 def getData():
     return data.asCsv()
 
+
+def exitHandler():
+    t.cancel()
+    data.dumpToFile("cached.csv")
+
+
+def preloadData(filename):
+    f = open(filename)
+
+    for (line in f.readlines()):
+        if (line.startswith("Time,")):
+            continue
+
+        split_line = line.split(",")
+        timestamp = split_line[0]
+        temperature = split_line[1]
+
+        data.add(DualValueNode(currentTime, currentTemp))
+
+    f.close()
+
+
 if __name__ == "__main__":
+    atexit.register(exitHandler)
     os.system('modprobe w1-gpio')
     os.system('modprobe w1-therm')
 
+    preloadData("cached.csv")
     recordPeriodicTemperature()
 
     app.run(host="0.0.0.0", port=8082, debug=True)
