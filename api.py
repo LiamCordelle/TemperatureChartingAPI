@@ -74,6 +74,7 @@ def recordPeriodicTemperature():
 
     data.add(DualValueNode(currentTime, currentTemp))
 
+    global t
     t = Timer(60, recordPeriodicTemperature)
     t.start()
 
@@ -84,14 +85,15 @@ def getData():
 
 
 def exitHandler():
-    t.cancel()
     data.dumpToFile("cached.csv")
+    global t
+    t.cancel()
 
 
 def preloadData(filename):
     f = open(filename)
 
-    for (line in f.readlines()):
+    for line in f.readlines():
         if (line.startswith("Time,")):
             continue
 
