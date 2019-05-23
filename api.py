@@ -3,6 +3,7 @@ from flask_cors import CORS
 from threading import Timer
 import temperature as temp
 from datetime import datetime
+import os
 
 
 app = Flask(__name__)
@@ -42,7 +43,7 @@ class DualValueFixedLengthLinkedList:
         output = "Time,Temperature\n"
 
         while (current != None):
-            output += current.value1 + "," + current.value2 + "\n"
+            output += str(current.value1) + "," + str(current.value2) + "\n"
             current = current.next
 
         return output
@@ -60,7 +61,7 @@ data = DualValueFixedLengthLinkedList(12 * 60) # Will record every minute, so ho
 
 def recordPeriodicTemperature():
     currentTemp = temp.get_pi_temperature()
-    currentTime = datetime.now().replace(microseconds=0)
+    currentTime = datetime.now().replace(microsecond=0)
 
     data.add(DualValueNode(currentTime, currentTemp))
 
