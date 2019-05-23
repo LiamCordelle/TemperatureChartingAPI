@@ -60,7 +60,7 @@ data = DualValueFixedLengthLinkedList(12 * 60) # Will record every minute, so ho
 
 def recordPeriodicTemperature():
     currentTemp = temp.get_pi_temperature()
-    currentTime = datetime.now()
+    currentTime = datetime.now().replace(microseconds=0)
 
     data.add(DualValueNode(currentTime, currentTemp))
 
