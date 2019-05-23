@@ -5,6 +5,10 @@ import temperature as temp
 from datetime import datetime
 
 
+app = Flask(__name__)
+CORS(app)
+
+
 class DualValueFixedLengthLinkedList:
     def __init__(self, maxLength):
         self.maxLength = maxLength
