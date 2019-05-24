@@ -7,6 +7,9 @@ import os
 import atexit
 
 
+TZ_OFFSET = 12
+
+
 app = Flask(__name__)
 CORS(app)
 
@@ -71,6 +74,7 @@ t = None
 def recordPeriodicTemperature():
     currentTemp = temp.get_pi_temperature()
     currentTime = datetime.now().replace(microsecond=0)
+    currentTime = currentTime.replace(hour=(currentTime + TZ_OFFSET))
 
     data.add(DualValueNode(currentTime, currentTemp))
 
