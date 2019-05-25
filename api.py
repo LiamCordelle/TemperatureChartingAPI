@@ -67,7 +67,7 @@ class DualValueNode:
         self.next = None
 
 
-data = DualValueFixedLengthLinkedList(12 * 60) # Will record every minute, so hold 12 hours of data
+data = DualValueFixedLengthLinkedList(48 * 60) # Will record every minute, so hold 48 hours of data
 
 t = None
 
