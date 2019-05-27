@@ -5,10 +5,10 @@ import temperature as temp
 from datetime import datetime
 import os
 import atexit
+import pytz
 
 
-TZ_OFFSET = 12
-
+TIMEZONE = pytz.timezone("NZ")
 
 app = Flask(__name__)
 CORS(app)
@@ -73,10 +73,11 @@ t = None
 
 def recordPeriodicTemperature():
     currentTemp = temp.get_pi_temperature()
-    currentTime = datetime.now().replace(microsecond=0)
-    currentTime = currentTime.replace(hour=(currentTime.hour + TZ_OFFSET))
+    currentTime = datetime.now(TIMEZONE)
+    
+    currentTimeString = currentTime.strftime("%Y-%m-%d %H:%M:%S")
 
-    data.add(DualValueNode(currentTime, currentTemp))
+    data.add(DualValueNode(currentTimeString, currentTemp))
 
     global t
     t = Timer(60, recordPeriodicTemperature)
@@ -98,14 +99,14 @@ def preloadData(filename):
     f = open(filename)
 
     for line in f.readlines():
-        if (line.startswith("Time,")):
+        if (line.startswith("Time,") or not("," in line)):
             continue
 
         split_line = line.split(",")
         timestamp = split_line[0]
         temperature = split_line[1]
 
-        data.add(DualValueNode(currentTime, currentTemp))
+        data.add(DualValueNode(timestamp, temperature))
 
     f.close()
 
