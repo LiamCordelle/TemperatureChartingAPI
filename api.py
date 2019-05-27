@@ -81,6 +81,7 @@ def recordPeriodicTemperature():
 
     global t
     t = Timer(60, recordPeriodicTemperature)
+    t.daemon = True
     t.start()
 
 
