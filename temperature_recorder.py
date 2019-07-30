@@ -11,9 +11,6 @@ from firebase_admin import firestore
 
 TIMEZONE = pytz.timezone("NZ")
 
-t = None
-temperature_doc = None
-
 def recordTemperature(document):
     currentTemp = temp.get_pi_temperature()
     currentTime = datetime.now(TIMEZONE)
@@ -22,7 +19,7 @@ def recordTemperature(document):
 
     document.set({
         unicode(currentTimeString, "utf-8"): currentTemp
-    }. merge=True)
+    }, merge=True)
  
 if __name__ == "__main__":
     os.system('modprobe w1-gpio')
@@ -33,7 +30,6 @@ if __name__ == "__main__":
 
     firebase_db = firestore.client()
 
-    global temperature_doc
     temperature_doc = firebase_db.collection(u'temperature_data').document(u'temperatures')
 
     recordTemperature(temperature_doc)
