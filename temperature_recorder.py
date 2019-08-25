@@ -15,13 +15,13 @@ def recordTemperature(collection):
     currentTemp = temp.get_pi_temperature()
     currentTime = datetime.now(TIMEZONE)
     
-    currentTimeString = currentTime.strftime("%Y-%m-%d %H:%M:%S")
+    currentTimeString = unicode(currentTime.strftime("%Y-%m-%d %H:%M:%S"), "utf-8")
 
-    document = collection.document(unicode(currentTimeString, "utf-8"))
+    document = collection.document(currentTimeString)
 
     document.set({
-        timestamp: currentTimeString,
-        temperature: currentTemp
+        u"timestamp": currentTimeString, 
+        u"temperature": currentTemp
     })
  
 if __name__ == "__main__":
