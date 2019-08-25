@@ -25,7 +25,7 @@ if __name__ == "__main__":
     os.system('modprobe w1-gpio')
     os.system('modprobe w1-therm')
 
-    firebase_creds = credentials.Certificate('firebase_account.json')
+    firebase_creds = credentials.Certificate('/home/pi/TemperatureChartingAPI/firebase_account.json')
     firebase_admin.initialize_app(firebase_creds)
 
     firebase_db = firestore.client()
