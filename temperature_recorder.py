@@ -11,15 +11,18 @@ from firebase_admin import firestore
 
 TIMEZONE = pytz.timezone("NZ")
 
-def recordTemperature(document):
+def recordTemperature(collection):
     currentTemp = temp.get_pi_temperature()
     currentTime = datetime.now(TIMEZONE)
     
     currentTimeString = currentTime.strftime("%Y-%m-%d %H:%M:%S")
 
+    document = collection.document(unicode(currentTimeString, "utf-8"))
+
     document.set({
-        unicode(currentTimeString, "utf-8"): currentTemp
-    }, merge=True)
+        timestamp: currentTimeString,
+        temperature: currentTemp
+    })
  
 if __name__ == "__main__":
     os.system('modprobe w1-gpio')
@@ -30,6 +33,6 @@ if __name__ == "__main__":
 
     firebase_db = firestore.client()
 
-    temperature_doc = firebase_db.collection(u'temperature_data').document(u'temperatures')
+    temperature_collection = firebase_db.collection(u'temperature_data_v2')
 
-    recordTemperature(temperature_doc)
+    recordTemperature(temperature_collection)
