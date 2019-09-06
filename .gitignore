@@ -1,3 +1,4 @@
 cached.csv
 *.pyc
 firebase_account.json
+.vscode/*
